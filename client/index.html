@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trackify</title>
+    
+    <!-- Add Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
+    <link rel="manifest" href="assets/favicon/site.webmanifest">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo" style="display: flex; align-items: center; gap: 0.2rem;">
+                <img src="assets/logo.png" alt="Trackify" style="height: 40px;">
+                <span style="font-size: 1.5rem; font-weight: bold;">Trackify</span>
+            </div>
+            <div class="user-info">
+                <span id="userWelcome" class="hidden">Welcome, <span id="currentUser"></span></span>
+                <button id="logoutBtn" class="btn btn-secondary btn-small hidden">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Authentication Section -->
+        <div id="authSection" class="auth-container">
+            <div class="auth-card">
+                <h2 class="auth-title" id="authTitle">Login</h2>
+                <form id="authForm">
+                    <div class="form-group">
+                        <label class="form-label" for="username">Username</label>
+                        <input type="text" id="username" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email</label>
+                        <input type="email" id="email" class="form-input" required>
+                    </div>
+                    <div class="form-group hidden" id="passwordConfirmGroup">
+                        <label class="form-label" for="passwordConfirm">Confirm Password</label>
+                        <input type="password" id="passwordConfirm" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password</label>
+                        <input type="password" id="password" class="form-input" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;">
+                        <span id="authBtnText">Login</span>
+                        <span id="authSpinner" class="spinner hidden"></span>
+                    </button>
+                    <div class="text-center">
+                        <button type="button" id="switchAuth" class="btn btn-secondary">
+                            Don't have an account? Register
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboardSection" class="dashboard hidden">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Bug Tracker Dashboard</h1>
+                <p class="dashboard-subtitle">Manage and track bugs efficiently</p>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalBugs">0</div>
+                    <div class="stat-label">Total Bugs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="openBugs">0</div>
+                    <div class="stat-label">Open Bugs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="resolvedBugs">0</div>
+                    <div class="stat-label">Resolved</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="criticalBugs">0</div>
+                    <div class="stat-label">Critical</div>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls">
+                <div class="controls-row">
+                    <button id="addBugBtn" class="btn btn-primary">
+                        ➕ Add New Bug
+                    </button>
+                    <div class="control-group">
+                        <label>Filter by Status</label>
+                        <select id="statusFilter" class="form-select">
+                            <option value="">All Status</option>
+                            <option value="Open">Open</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Resolved">Resolved</option>
+                            <option value="Closed">Closed</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Filter by Severity</label>
+                        <select id="severityFilter" class="form-select">
+                            <option value="">All Severity</option>
+                            <option value="Critical">Critical</option>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Sort by</label>
+                        <select id="sortBy" class="form-select">
+                            <option value="created_at">Date Created</option>
+                            <option value="severity">Severity</option>
+                            <option value="status">Status</option>
+                            <option value="title">Title</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Search</label>
+                        <input type="text" id="searchInput" class="form-input" placeholder="Search bugs...">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" data-tab="all">All Bugs</button>
+                <button class="tab" data-tab="open">Open</button>
+                <button class="tab" data-tab="progress">In Progress</button>
+                <button class="tab" data-tab="resolved">Resolved</button>
+                <button class="tab" data-tab="closed">Closed</button>
+            </div>
+
+            <!-- Bug List -->
+            <div id="bugList" class="bug-list">
+                <!-- Bugs will be dynamically inserted here -->
+            </div>
+
+            <!-- Load More Button -->
+            <div class="text-center mt-3">
+                <button id="loadMoreBtn" class="btn btn-secondary hidden">Load More Bugs</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bug Form Modal -->
+    <div id="bugModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Add New Bug</h2>
+                <button class="close-btn" id="closeBugModal">&times;</button>
+            </div>
+            <form id="bugForm">
+                <input type="hidden" id="bugId">
+                <div class="form-group">
+                    <label class="form-label" for="bugTitle">Title *</label>
+                    <input type="text" id="bugTitle" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="bugDescription">Description *</label>
+                    <textarea id="bugDescription" class="form-textarea" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="bugSeverity">Severity *</label>
+                    <select id="bugSeverity" class="form-select" required>
+                        <option value="">Select Severity</option>
+                        <option value="Critical">Critical</option>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="bugStatus">Status</label>
+                    <select id="bugStatus" class="form-select">
+                        <option value="Open">Open</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Resolved">Resolved</option>
+                        <option value="Closed">Closed</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="bugAssignedTo">Assigned To</label>
+                    <input type="text" id="bugAssignedTo" class="form-input" placeholder="Enter username">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="bugSteps">Steps to Reproduce</label>
+                    <textarea id="bugSteps" class="form-textarea" placeholder="1. Step one&#10;2. Step two&#10;3. Step three"></textarea>
+                </div>
+                <div class="flex gap-2 mt-3">
+                    <button type="submit" class="btn btn-primary">
+                        <span id="saveBugText">Save Bug</span>
+                        <span id="saveBugSpinner" class="spinner hidden"></span>
+                    </button>
+                    <button type="button" id="generateTagsBtn" class="btn btn-secondary">
+                        🤖 Generate AI Tags
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="cancelBugBtn">Cancel</button>
+                </div>
+                <!-- ✅ Add This AI Tags Input Block Below -->
+<div class="form-group">
+    <label class="form-label" for="bugTags">AI Tags</label>
+    <input type="text" id="bugTags" class="form-input" readonly placeholder="Tags will appear here...">
+</div>
+                <div id="generatedTags" class="tag-chips mt-2"></div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

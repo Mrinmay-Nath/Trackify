@@ -1,0 +1,44 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    env_file:
+      - .env   # ✅ refers to .env in root
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      # MYSQL_USER: ${DB_USER}
+      # MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - '3307:3306'
+
+  backend:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    container_name: backend
+    restart: always
+    depends_on:
+      - mysql
+    env_file:
+      - .env  # ✅ use root .env
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./server:/app
+
+  frontend:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+    container_name: frontend
+    ports:
+      - '8080:80'
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
