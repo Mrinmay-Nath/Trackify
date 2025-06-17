@@ -215,5 +215,5 @@ MIT License — use, modify, share freely
 
 ## 💡 Built with Passion
 
-Crafted with ❤️ by **[MRINMAY NATH]** — Empowering developers to squash bugs beautifully.
+Crafted with ❤️ by **MRINMAY NATH**
 
