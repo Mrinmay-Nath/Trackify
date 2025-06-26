@@ -13,8 +13,8 @@ bug-tracker-project/
 │   │   └── schema.sql
 │   ├── routes/
 │   │   └── aiTags.js
-│   ├── uploads/
-│   │   └── attachments/
+│   ├── services/
+│   │   └── notificationService.js
 │   ├── .env
 │   ├── package.json
 │   └── server.js
